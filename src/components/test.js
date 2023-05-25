@@ -20,7 +20,7 @@ const MainApp = () => {
         title="increase"
         onPress={()=>dispatch(increment_counter())}
       />
-      <Text>{counter}</Text>
+      <Text style={{ color: 'black' }}>{counter}</Text>
       <Button 
         title="decrease"
         onPress={()=>dispatch(decrement_counter())}

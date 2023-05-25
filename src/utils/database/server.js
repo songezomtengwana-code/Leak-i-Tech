@@ -1,7 +1,18 @@
 import React, {useState} from 'react';
 
-// export let name, tag, category, image, description, location, geolocation;
-export const [catergory, setCategory] = useState(null)
+export let name, tag, category, image, description, location, geolocation;
+
+const [requestName, setRequestName] = useState(null);
+const [requestTag, setRequestTag] = useState(null);
+
+export function handleName(type) {
+    try {
+        setRequestName(type)
+        console.log({ category: type })
+    } catch (e) {
+        console.error({ error: e.message })
+    }
+}
 
 export const requestConfig = {
     postedon: Date.now(),
@@ -25,7 +36,3 @@ function handleConfigPush() {
         console.log(server)
     }
 }
-
-export const server = [
-
-]

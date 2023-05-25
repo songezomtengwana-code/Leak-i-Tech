@@ -4,10 +4,16 @@ import { FabComponent } from '../../../components/fab/fab-component';
 import { styles } from './options.styles'
 import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux';
+import { Keyframe } from 'react-native-reanimated';
 
 export function CategoryScreen({ route }) {
 
-    const { key } = route.params;
+    const { key, name } = route.params;
+
+    const requestPath = {
+        key: key,
+        category: name,
+    }
 
     const [selection, setSelection] = useState([])
 
@@ -61,24 +67,23 @@ export function CategoryScreen({ route }) {
     const transport = [
         {
             categoryId: '2q-0d923e-d932-ed-23r',
-            name: 'Piensalo',
+            name: 'Potholes',
         },
         {
             categoryId: '3q-0d923e-d932-ed-23r',
-            name: 'Piensalo',
+            name: 'Traffic',
         },
         {
             categoryId: '4q-0d923e-d932-ed-23r',
-            name: 'Piensalo',
+            name: 'Accidents',
         }
     ]
 
     const navigation = useNavigation();
-    const category = useSelector((state) => state.requests);
-    console.log(category)
+
     function nextScreen(selection) {
         try {
-            navigation.navigate('upload')
+            navigation.navigate('upload', { key: key, name: name, type: selection })
             console.log({ selected: selection })
         } catch (error) {
             console.log({ response: error })
@@ -87,7 +92,10 @@ export function CategoryScreen({ route }) {
 
     useEffect(() => {
         handleCatergoryOptions()
+        console.log(requestPath)
     }, [])
+
+
 
     return (
         <ScrollView style={styles.screen}>

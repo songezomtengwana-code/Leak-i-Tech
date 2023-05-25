@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { auth, db } from '../../utils/services/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { registerUser } from '../../utils/services/global';
+import { updateProfile } from 'firebase/auth';
 
 export default function SignUpScreen() {
     const [fullname, setFullname] = useState('');
@@ -13,15 +14,26 @@ export default function SignUpScreen() {
     const [password, setPassword] = useState('');
     const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
     async function emailAndPassowordSignup(email, password) {
+        setUploading(true);
         setIsLoading(true)
         auth
             .createUserWithEmailAndPassword(email, password)
             .then(UC => {
                 const user = UC.user;
-                console.log({ userEmailAddress: user.email });
-                navigation.navigate('setup', { username: fullname });
+                updateProfile(auth.currentUser, {
+                    displayName: fullname,
+                }).then(() => {
+                    console.log(auth.currentUser)
+                }).catch((error) => {
+                    console.log(error)
+                });
+
+                console.log({ email: user.email, fullname: user.displayName })
+
+                navigation.navigate('tabs', { username: fullname });
             })
             .catch(error => {
                 if (error.code === 'auth/email-already-in-use') {
@@ -36,7 +48,8 @@ export default function SignUpScreen() {
 
                 console.error(error);
             });
-        setIsLoading(false)
+        setIsLoading(false);
+        setUploading(false);
     }
 
     async function createUser() {
@@ -66,6 +79,15 @@ export default function SignUpScreen() {
     return (
         <ScrollView style={{ minHeight: '100%' }}>
             <View style={styles.container}>
+                {uploading
+                    ?
+                    <View style={{ minheight: 500, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: '#004AADa1', flex: 1, alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
+                        <ActivityIndicator color='#FFFFFF' size='large'></ActivityIndicator>
+                        <Text style={{ color: '#FFF', fontWeight: 'bold', marginTop: 15 }}>uploading, please wait ...</Text>
+                    </View>
+                    :
+                    <View></View>
+                }
                 <Image style={styles.icon} source={require('../../images/icon.png')} />
                 <Text style={styles.header}>Create Account</Text>
                 <TouchableOpacity style={styles.button}>
@@ -90,7 +112,7 @@ export default function SignUpScreen() {
                         <Text style={styles.form_area_label}>Password</Text>
                         <TextInput style={styles.form_area_input} value={password} onChangeText={(text) => setPassword(text)} secureTextEntry />
                     </View>
-                    <TouchableOpacity style={[styles.button, styles.primary_button]} onPress={() => { emailAndPassowordSignup(email, password), registerUser(fullname, email) }}>
+                    <TouchableOpacity style={[styles.button, styles.primary_button]} onPress={() => { emailAndPassowordSignup(email, password) }}>
                         <Text style={styles.primary_button_text}>Sign Up</Text>
                     </TouchableOpacity>
                     <Text style={styles.redirect}>

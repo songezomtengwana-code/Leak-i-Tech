@@ -3,15 +3,24 @@ import { View, Text, TouchableOpacity,TextInput } from 'react-native';
 import { styles } from './options.styles';
 import { useNavigation } from '@react-navigation/native';
 
-export function CaptionScreen() {
+export function CaptionScreen({ route }) {
     const [comment, setComment] = useState('');
+
+    const { key, name, type, localsrc, localname } = route.params;
+
+    const requestPath = {
+        key: key,
+        category: name,
+        sub: type ,
+        image: localsrc
+    }
 
     const navigation = useNavigation();
 
     function nextScreen(selection) {
         try {
-            navigation.navigate('complete')
-            console.log({ selected: selection })
+            navigation.navigate('submit', { key: key, name: name, sub: type, image: localsrc, localname: localname,description: selection})
+            console.log({ key: key, name: name, sub: type, image: localsrc, description: selection});
         } catch (error) {
             console.log({ response: error })
         }

@@ -17,9 +17,9 @@ export const HeaderComponent = ({ title }) => {
 
     return (
         <View style={styles.header}>
-            {/* <TouchableOpacity>
-                <Image source={require('../../images/menu.png')} style={styles.icon} />
-            </TouchableOpacity> */}
+            <TouchableOpacity onLongPress={() => { navigation.navigate('tests') }}>
+                <Image source={require('../../images/icon.png')} style={styles.icon} />
+            </TouchableOpacity>
             <View style={styles.text}>
                 <Text style={styles.title}>
                     {title}

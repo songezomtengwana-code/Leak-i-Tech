@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { FabComponent } from '../../../components/fab/fab-component';
 import { styles } from './options.styles';
 import { useNavigation } from '@react-navigation/native';
-import { catergory, setCategory } from '../../../utils/database/server';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addRequest } from '../../../redux/slices/request.slice';
 import { addCategory } from '../../../redux/slices/category.slice';
+import { set_category } from '../../../redux/actions/category_actions';
+import { Button } from 'react-native-paper';
 
 export function OptionsScreen() {
     const categories = [
@@ -29,21 +29,19 @@ export function OptionsScreen() {
 
     const [category, setCategory] = useState(null);
     const dispatch = useDispatch();
+    const option = useSelector(state=>state.category)
 
     const navigation = useNavigation();
 
-    function nextScreen(selection) {
+    function nextScreen(selection, name) {
         try {
             setCategory(selection)
-            dispatch(addCategory(category));
-            setCategory('');
-            navigation.navigate('category', { key: selection })
+            navigation.navigate('category', { key: selection, name: name })
             console.log({ selected: selection })
         } catch (e) {
             console.log(e);
             Alert.alert('Sorry, there was an error encountered');
         }
-
     }
 
     return (
@@ -52,7 +50,7 @@ export function OptionsScreen() {
             <View style={styles.container}>
                 {categories.map((category) => {
                     return (
-                        <TouchableOpacity style={styles.button} key={category.categoryId} onPress={() => { nextScreen(category.key) }}>
+                        <TouchableOpacity style={styles.button} key={category.categoryId} onPress={() => { nextScreen(category.key, category.name) }}>
                             <Text style={styles.button_text}>{category.name}</Text>
                         </TouchableOpacity>
                     );

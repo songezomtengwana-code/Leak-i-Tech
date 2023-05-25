@@ -2,13 +2,16 @@ import React from 'react'
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+    cover: {
+        minHeight: 200
+    },
     container: {
         padding: 30,
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
-        minHeight: '100%'
+        height: '100%'
     },
     header: {
         fontSize: 30,
