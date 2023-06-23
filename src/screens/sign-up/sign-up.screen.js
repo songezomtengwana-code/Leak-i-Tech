@@ -5,8 +5,8 @@ import { styles } from './sign-up.styles';
 import { useNavigation } from '@react-navigation/native';
 import { auth, db } from '../../utils/services/firebase';
 import { doc, setDoc } from 'firebase/firestore';
-import { registerUser } from '../../utils/services/global';
-import { updateProfile } from 'firebase/auth';
+import { store_user, authenticate_user } from '../../utils/services/global';
+import { notifications } from '../../utils/database/app';
 
 export default function SignUpScreen() {
     const [fullname, setFullname] = useState('');
@@ -16,54 +16,41 @@ export default function SignUpScreen() {
     const [isLoading, setIsLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
 
-    async function emailAndPassowordSignup(email, password) {
+    async function signup() {
         setUploading(true);
-        setIsLoading(true)
-        auth
-            .createUserWithEmailAndPassword(email, password)
-            .then(UC => {
-                const user = UC.user;
-                updateProfile(auth.currentUser, {
-                    displayName: fullname,
-                }).then(() => {
-                    console.log(auth.currentUser)
-                }).catch((error) => {
-                    console.log(error)
-                });
+        setUploading(true);
 
-                console.log({ email: user.email, fullname: user.displayName })
-
-                navigation.navigate('tabs', { username: fullname });
-            })
-            .catch(error => {
-                if (error.code === 'auth/email-already-in-use') {
-                    console.log('That email address is already in use!');
-                    Alert.alert('Please enter an un used email');
-                }
-
-                if (error.code === 'auth/invalid-email') {
-                    console.log('That email address is invalid!');
-                    Alert.alert('Please enter a valid email.');
-                }
-
-                console.error(error);
-            });
-        setIsLoading(false);
-        setUploading(false);
-    }
-
-    async function createUser() {
-        setDoc(
-            doc(db, 'users', email), {
+        // configure user profile object
+        const user_config = {
             fullname: fullname,
-            email: email,
-            tag: fullname
+            tag: fullname.trim(),
+            email_address: email,
+            $date: {
+                value: `${Date()}`
+            },
+            notifications: [
+                {
+                    id: Date.now(),
+                    body: {
+                        sender: 'SAMS',
+                        senderEmail: 'sams.mun.project@gmail.com',
+                        content: `👋 Hello ${fullname}, And Thank You For Downloading The South African Municipal Services, For Help On How To Use This App Please Click On The Question Mark Icon Above`,
+                    },
+                    sentOn: Date(),
+                    readStatus: false,
+                },
+            ]
         }
-        ).then(() => {
-            console.log('new user registered');
-        }).catch((err) => {
-            console.log({ error: err })
-        })
+
+        if (fullname.length < 1, email.length < 1, password.length < 1) {
+            return Alert.alert('Cancelled', 'seems like some fields were not filled')
+        } else {
+            // creates user profile 
+            authenticate_user(email, password, fullname)
+            store_user(user_config);
+            setUploading(false);
+        }
+        setUploading(false)
     }
 
     useEffect(() => {
@@ -77,17 +64,17 @@ export default function SignUpScreen() {
     });
 
     return (
-        <ScrollView style={{ minHeight: '100%' }}>
+        <ScrollView style={{ height: '100%', backgroundColor: "white" }}>
+            {uploading
+                ?
+                <View style={{ height: '100%', position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: '#004AADa1', flex: 1, alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
+                    <ActivityIndicator color='#FFFFFF' size='large'></ActivityIndicator>
+                    <Text style={{ color: '#FFF', fontWeight: 'bold', marginTop: 15 }}>Signing Up ...</Text>
+                </View>
+                :
+                <View></View>
+            }
             <View style={styles.container}>
-                {uploading
-                    ?
-                    <View style={{ minheight: 500, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: '#004AADa1', flex: 1, alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
-                        <ActivityIndicator color='#FFFFFF' size='large'></ActivityIndicator>
-                        <Text style={{ color: '#FFF', fontWeight: 'bold', marginTop: 15 }}>uploading, please wait ...</Text>
-                    </View>
-                    :
-                    <View></View>
-                }
                 <Image style={styles.icon} source={require('../../images/icon.png')} />
                 <Text style={styles.header}>Create Account</Text>
                 <TouchableOpacity style={styles.button}>
@@ -112,12 +99,17 @@ export default function SignUpScreen() {
                         <Text style={styles.form_area_label}>Password</Text>
                         <TextInput style={styles.form_area_input} value={password} onChangeText={(text) => setPassword(text)} secureTextEntry />
                     </View>
-                    <TouchableOpacity style={[styles.button, styles.primary_button]} onPress={() => { emailAndPassowordSignup(email, password) }}>
+                    <TouchableOpacity style={[styles.button, styles.primary_button]} onPress={() => { signup() }}>
                         <Text style={styles.primary_button_text}>Sign Up</Text>
                     </TouchableOpacity>
                     <Text style={styles.redirect}>
                         Already have an account ? <Text style={styles.redirect_prompt} onPress={() => navigation.navigate('signin')}>Log in</Text>
                     </Text>
+
+                    {/* <View style={{ marginVertical: 20 }}
+                    >
+                        <Button textColor='#fff' buttonColor='#0f0f' onLongPress={() => { create_user() }}> TEST BUTTON 01 </Button>
+                    </View> */}
                 </View>
             </View>
         </ScrollView>

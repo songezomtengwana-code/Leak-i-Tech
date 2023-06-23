@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
         minHeight: "100%"
     },
     title: {
-        fontSize: 32,a
+        fontSize: 32,
         fontWeight: 'bold',
         textAlign: 'center',
         color: '#004AAD',
@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
         marginBottom: 15,
         alignItems: 'center',
         justifyContent: 'space-around',
-        minWidth: 165
+        width: 'auto'
     },
     button_text: {
         color: '#000000',

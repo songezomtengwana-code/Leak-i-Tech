@@ -13,7 +13,9 @@ const Stack = createNativeStackNavigator();
 
 export function RequestScreen() {
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            initialRouteName="options"
+        >
             <Stack.Screen name="options" component={OptionsScreen} options={{ headerShown: false }} />
             <Stack.Screen name="category" component={CategoryScreen} options={{ headerShown: false }} />
             <Stack.Screen name="upload" component={UploadScreen} options={{ headerShown: false }} />

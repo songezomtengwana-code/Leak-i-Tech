@@ -1,46 +1,116 @@
-import React from 'react'
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { Button } from 'react-native-paper';
+import React, { useEffect, useState } from 'react'
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { auth } from '../../../utils/services/firebase';
-import { getAuth } from 'firebase/auth';
-import { useDispatch } from 'react-redux';
+import { auth, db } from '../../../utils/services/firebase';
+import { notifications } from '../../../utils/database/app';
+import { _user, get_store_user } from '../../../utils/services/global';
+import { ActivityIndicator } from 'react-native-paper';
 
 export default function NotificationScreen() {
-    const navigation = useNavigation()
+    const navigation = useNavigation();
+    const [expand, setExpand] = useState(false);
+    const [notification, setnotification] = useState(undefined);
 
-    const notifications = [
+    function toggleExpander() {
+        const invert = !expand
+        setExpand(invert)
+    }
 
-    ]
+    useEffect(() => {
+        get_store_user()
+        if (_user == null || undefined)  {
+            get_store_user()
+        } else {
+            setnotification(_user.notifications)
+        }
+    }, [])
 
-    const user = auth.currentUser;
-
-    return (
-        <View style={{ minHeight: '100%', backgroundColor: '#ffffff' }}>
-            <View style={styles.header}>
-                <Text style={styles.title}>Notifications</Text>
-                <TouchableOpacity>
-                    <Image source={require('../../../images/gear.png')} style={styles.gear} />
-                </TouchableOpacity>
-            </View>
-            <ScrollView>
-                <View styles={styles.container}>
-                    {notifications.length > 0
-                        ? <View>{notifications.length}</View>
-                        : <View style={styles.empty}>
-                            <Text style={styles.empty_text}>No New Notifications</Text>
-                        </View>
-                    }
+    if (notification !== undefined) {
+        return (
+            <View style={{ minHeight: '100%', backgroundColor: '#ffffff' }}>
+                <View style={styles.header}>
+                    <Text style={styles.title}>Notifications</Text>
+                    <TouchableOpacity>
+                        <Image source={require('../../../images/info.png')} style={styles.gear} />
+                    </TouchableOpacity>
                 </View>
-            </ScrollView>
-        </View>
-    )
+                <ScrollView style={{ marginBottom: 100 }}>
+                    <View styles={styles.container}>
+                    {
+                       notifications?.map((res) => {
+                            return (
+                                <View style={styles.column} key={res.id}>
+                                    {
+                                        res.readStatus !== false
+                                            ?
+                                            <TouchableOpacity style={[styles.block, styles.active]} onPress={() => toggleExpander()}>
+                                                <Text style={styles.sender}>
+                                                    {res.body.sender}
+                                                </Text>
+                                                {expand
+                                                    ? <Text style={styles.body} ellipsizeMode='tail' numberOfLines={2}>
+                                                        {res.body.content}
+                                                    </Text>
+                                                    : <Text style={styles.body}>
+                                                        {res.body.content}
+                                                    </Text>
+                                                }
+                                                <Text style={styles.date}>
+                                                    {res.sentOn}
+                                                </Text>
+                                            </TouchableOpacity>
+                                            : <TouchableOpacity style={[styles.block, styles.inactive]} key={res.id} onPress={() => toggleExpander()}>
+                                                <Text style={styles.sender}>
+                                                    {res.body.sender}
+                                                </Text>
+                                                {expand
+                                                    ? <Text style={styles.body} ellipsizeMode='tail' numberOfLines={2}>
+                                                        {res.body.content}
+                                                    </Text>
+                                                    : <Text style={styles.body}>
+                                                        {res.body.content}
+                                                    </Text>
+                                                }
+                                                <Text style={styles.date}>
+                                                    {res.sentOn}
+                                                </Text>
+                                            </TouchableOpacity>
+                                    }
+                                </View>
+                            )
+                        })
+                    }
+                    </View>
+                </ScrollView>
+            </View>
+        )
+    } else {
+        return (
+            <View style={{ minHeight: '100%', backgroundColor: '#ffffff' }}>
+                <View style={styles.header}>
+                    <Text style={styles.title}>Notifications</Text>
+                    <TouchableOpacity>
+                        <Image source={require('../../../images/info.png')} style={styles.gear} />
+                    </TouchableOpacity>
+                </View>
+                <ScrollView style={{ marginBottom: 100 }}>
+                    <View styles={styles.container}>
+                       <View style={{ marginVertical: 50, textAlign: 'center', height: '100%', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                            <ActivityIndicator size='small' color='#004aad' />
+                            
+                            <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'black', marginVertical: 10 }}>Loading </Text>
+                       </View>
+                    </View>
+                </ScrollView>
+            </View>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
     header: {
-        backgroundColor: '#ffffff',
-        paddingBottom: 10,
+        backgroundColor: '#004aad',
+        paddingBottom: 25,
         paddingHorizontal: 20,
         paddingTop: 35,
         marginBottom: 20,
@@ -50,7 +120,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 30,
         fontWeight: 'bold',
-        color: '#004AAD',
+        color: '#ffffff',
     },
     gear: {
         height: 25,
@@ -67,5 +137,32 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 18,
         color: '#5e5e5e'
+    },
+    column: {
+
+    },
+    block: {
+        color: '#000000',
+        padding: 20
+    },
+    sender: {
+        color: '#000000',
+        fontWeight: 'bold',
+        marginBottom: 5,
+        fontSize: 18
+    },
+    body: {
+        width: 350,
+        color: '#000000',
+        fontSize: 15,
+        marginBottom: 10
+    },
+    inactive: {
+        backgroundColor: 'white',
+        borderBottomColor: '#ededed',
+        borderBottomWidth: 2
+    },
+    date: {
+        color: 'grey'
     }
 })

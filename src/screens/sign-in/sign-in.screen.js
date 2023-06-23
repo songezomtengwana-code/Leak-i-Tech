@@ -31,12 +31,34 @@ export default function SignInScreen() {
                 if (error.code === 'auth/email-already-in-use') {
                     console.log('That email address is already in use!');
                     Alert.alert('Please enter an un used email');
+                    setEmail(undefined)
+                    setPassword(undefined)
                 }
 
                 if (error.code === 'auth/invalid-email') {
                     console.log('That email address is invalid!');
                     Alert.alert('Please enter a valid email.');
+                    setEmail(undefined)
                 }
+
+                if (error.code === 'auth/user-not-found') {
+                    console.log('That email address is invalid!');
+                    Alert.alert('Incorrrect Password', 'The password you entered is incorrect');
+                    setPassword(undefined)
+                }
+
+                if (error.code === 'auth/user-not-found') {
+                    console.log('That email address is invalid!');
+                    Alert.alert('Not Found', 'The user email is not a valid');
+                    setPassword(undefined)
+                }
+
+                if (error.code === 'auth/network-request-failed') {
+                    console.log('Unable to connect with the database!');
+                    Alert.alert('Network Erorr', 'Please check your internet connection');
+                    setPassword(undefined)
+                }
+
                 setLoading(false)
                 setLoading(false)
                 setLoading(false)
@@ -63,7 +85,7 @@ export default function SignInScreen() {
                 </View>
                 :
                 <View></View>}
-        <View style={styles.container}>
+            <View style={styles.container}>
                 <Image style={styles.icon} source={require('../../images/icon.png')} />
                 <Text style={styles.header}>Log In</Text>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('tabs')}>

@@ -3,7 +3,8 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
     cover: {
-        minHeight: 200
+        minHeight: 200,
+        backgroundColor: '#ffffff'
     },
     container: {
         padding: 30,

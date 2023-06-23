@@ -9,7 +9,7 @@ export function CompleteScreen() {
 
     function nextScreen(selection) {
         try {
-            navigation.navigate('options')
+            navigation.navigate('usertab')
             console.log({ selected: selection })
         } catch (error) {
             console.log({ response: error })

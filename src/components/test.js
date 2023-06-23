@@ -5,7 +5,8 @@ import {
   increment_counter, 
   decrement_counter
   } from '../redux/actions/counter_actions';
-const MainApp = () => {
+const MainApp = ({navigation,route}) => {
+  const { result } = route.params;
   const counter = useSelector(state=>state.counter);
   const dispatch = useDispatch();
   return(

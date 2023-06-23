@@ -1,21 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Image, SafeAreaView, TouchableOpacity } from 'react-native';
 import { ApprovedBadge, PendingBadge } from '../badge/badge-component';
 import { auth } from '../../utils/services/firebase';
 import { useNavigation } from '@react-navigation/native';
-import { Button } from 'react-native-paper';
+import { ActivityIndicator } from 'react-native-paper';
 
 export const RequestCard = ({ config }) => {
   const user = auth.currentUser
   const nav = useNavigation()
+
+  useEffect(() => {
+  }, [])
 
   if (config.length > 0) {
     return (
       <SafeAreaView style={styles.displayer}>
         {config.map((request) => {
           return (
-            <TouchableOpacity key={request.id} style={styles.card} onPress={() => nav.navigate('requestModal', {
-              id: request.id
+            <TouchableOpacity key={request.order} style={styles.card} onPress={() => nav.navigate('requestModal', {
+              id: request.order, request: request
             })}>
               <View style={styles.container}>
                 <View style={{ marginVertical: 10, flexDirection: 'row', gap: 10 }}>
@@ -53,14 +56,15 @@ export const RequestCard = ({ config }) => {
   }
   else {
     return (
-      <View Style={{ flex:1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', paddingVertical: 50 }}>
-        <Text style={{ textAlign: 'center', padding: 50, fontWeight: 700 }}> No Requests </Text>
+      <View Style={{ flex:1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100%', paddingVertical: 100,}}>
+        <Text style={{ textAlign: 'center',fontWeight: 700, color: 'black', marginTop: 50 }}> No Requests </Text>
       </View>
     );
   }
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create(
+  {
   displayer: {
     flexDirection: 'column',
     gap: 20,
