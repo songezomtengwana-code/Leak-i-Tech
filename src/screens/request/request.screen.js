@@ -7,6 +7,7 @@ import { UploadScreen } from "./options/upload.screen";
 import { CaptionScreen } from "./options/caption.screen";
 import { CompleteScreen } from "./options/complete.screen";
 import SubmitScreen from "./options/submit.screen";
+import { colors } from "../../utils/theme/colors";
 
 
 const Stack = createNativeStackNavigator();
@@ -15,6 +16,7 @@ export function RequestScreen() {
     return (
         <Stack.Navigator
             initialRouteName="options"
+            screenOptions={{ contentStyle: {backgroundColor: colors.white} }}
         >
             <Stack.Screen name="options" component={OptionsScreen} options={{ headerShown: false }} />
             <Stack.Screen name="category" component={CategoryScreen} options={{ headerShown: false }} />

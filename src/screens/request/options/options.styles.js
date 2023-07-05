@@ -1,10 +1,13 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../../utils/theme/colors';
+import { windowHeight, windowWidth } from '../../../utils/theme/dimensions';
+
 export const styles = StyleSheet.create({
     screen: {
         padding: 20,
         paddingVertical: 40,
         backgroundColor: "white",
-        minHeight: "100%"
+        marginBottomBottom: 250
     },
     title: {
         fontSize: 32,
@@ -53,7 +56,7 @@ export const styles = StyleSheet.create({
         marginTop: 15,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 50
+        marginBottom: 20    
     },
     button_alternative_text: {
         color: '#ffffff',
@@ -82,5 +85,43 @@ export const styles = StyleSheet.create({
     icon: {
         height: 20,
         width: 20
+    }
+})
+
+export const overlay = StyleSheet.create({
+    top: {
+        flex: 1,
+        zIndex: 100,
+        backgroundColor: colors.primary_transparent,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        height: windowHeight,
+        width: windowWidth,
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        paddingHorizontal: 25
+    },
+    top_container: {
+        backgroundColor: colors.white,
+        padding: 25,
+        borderRadius: 10,
+    },
+    top_container_title: {
+        color: colors.black,
+        fontSize: 20,
+        fontWeight: 'bold'
+    },
+    top_container_context: {
+        color: colors.black,
+        marginVertical: 15,
+        fontSize: 16
+    }, 
+    top_container_buttons: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginTop: 15
     }
 })

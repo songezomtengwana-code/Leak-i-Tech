@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@klarna/react-native-vector-drawable": "^0.4.0",
     "@react-native-firebase/app": "^17.5.0",
     "@react-native-firebase/firestore": "^17.5.0",
     "@react-native-firebase/storage": "^17.5.0",
@@ -42,6 +43,7 @@
     "react-native-svg": "^13.9.0",
     "react-native-tab-view": "^3.5.1",
     "react-native-vector-icons": "^9.2.0",
+    "react-native-vector-image": "^0.4.3",
     "react-redux": "^8.0.5",
     "redux": "^4.2.1",
     "uuid": "^9.0.0"
