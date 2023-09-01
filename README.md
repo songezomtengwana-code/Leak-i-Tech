@@ -7,7 +7,7 @@ application will also be used to alert residence of a specific area to issues th
 
 <br />
 
-<a href="" style="color: #ffffff">***Try latest S.A.M.S app apk 📱***</a>
+<a href="https://github.com/songezomtengwana-code/SAMSV2/releases/download/v0.0.1/sams.v0.0.1.apk" style="color: #ffffff">***Try latest S.A.M.S app apk 📱***</a>
 
 <br />
 
