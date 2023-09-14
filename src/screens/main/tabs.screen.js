@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import HomeScreen from './tabs/home.screen';
 import NotificationScreen from './tabs/notifications.screen';
 import { RequestScreen } from '../request/request.screen'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { Avatar } from 'react-native-paper';
-import { Image } from 'react-native';
+import { notifications } from '../../utils/database/app';
+import HouseDoorFill from 'react-native-bootstrap-icons/icons/house-door-fill';
+import { colors } from '../../utils/theme/colors';
+import PlusSquareFill from 'react-native-bootstrap-icons/icons/plus-square-fill';
+import BellFill from 'react-native-bootstrap-icons/icons/bell-fill';
+import { _user } from '../../utils/services/global';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -22,20 +24,21 @@ export default function TabsScreen() {
             <Tab.Screen name='home' component={HomeScreen} options={{
                 headerShown: false, tabBarLabel: 'Home',
                 tabBarIcon: ({ color }) => (
-                    <Image source={require('../../images/home.png')} size={25} style={{ backgroundColor: 'transparent', height: 20, width: 20 }} />
-                ),
+                        <HouseDoorFill fill={colors.primary} />
+                    ),
             }} />
             <Tab.Screen name="add" component={RequestScreen} options={{
                 headerShown: false, tabBarLabel: 'Request',
                 tabBarIcon: ({ color }) => (
-                    <Image source={require('../../images/add.png')} size={25} style={{ backgroundColor: 'transparent', height: 20, width: 20 }} />
+                    <PlusSquareFill fill={colors.primary} />
+
                 ),
             }} />
             <Tab.Screen name="notification" component={NotificationScreen} options={{
                 headerShown: false, tabBarLabel: 'Notifications',
                 tabBarIcon: ({ color }) => (
-                    <Image source={require('../../images/bell.png')} size={25} style={{ backgroundColor: 'transparent', height: 20, width: 20 }} />
-                ),
+                    <BellFill fill={colors.primary} />
+                    ),
             }} />
 
         </Tab.Navigator>

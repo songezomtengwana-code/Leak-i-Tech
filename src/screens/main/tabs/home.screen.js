@@ -1,14 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import UserRequests from './home-tabs/user-requests';
 import CommunalRequest from './home-tabs/communal-requests';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { _user, get_requests, get_store_user } from '../../../utils/services/global';
 
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function HomeScreen() {
+
+    useEffect(() => {
+        get_store_user()
+        console.log(_user)
+        get_requests()
+    }, [])
+
     return (
         <Tab.Navigator
             tabBarPosition='top'

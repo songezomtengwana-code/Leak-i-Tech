@@ -1,182 +1,174 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
-import { styles } from './options.styles'
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Alert,
+} from 'react-native';
+import {styles} from './options.styles';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import UploadComponent from '../../../components/upload/upload-component';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import GetLocation from 'react-native-get-location';
-import { Avatar, Button, TextInput } from 'react-native-paper';
-import { firebase } from '../../../utils/services/firebase';
+import {ActivityIndicator} from 'react-native-paper';
+import {
+  get_storage_image,
+  upload_to_storage,
+} from '../../../utils/services/global';
+import {reverse_geocoder} from '../../../utils/services/location-service';
 
-export function UploadScreen({ route }) {
-    const [isValid, setValid] = useState(false);
-    const [response, setResponse] = useState(null);
-    const [image, setImage] = useState(null);
-    const navigation = useNavigation();
-    const [uploading, setUploading] = useState(null)
-    const [comment, setComment] = useState(null)
-    const [geolocation, setGeoLocation] = useState(null)
-    let src;
+export function UploadScreen( {route}) {
+  const [isValid, setValid] = useState(false);
+  const [response, setResponse] = useState(null);
+  const [image, setImage] = useState(null);
+  const navigation = useNavigation();
+  const [directLocation, setDirectLocation] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [geolocation, setGeoLocation] = useState(null);
+  let src;
 
-    const { key, name, type } = route.params;
+  const {key, name, type} = route.params;
 
-    const requestPath = {
-        key: key,
-        category: name,
-        sub: type
-    }
-
-    const PickImage = async () => {
-        let result = await launchImageLibrary({
-            mediaType: 'mixed',
-            saveToPhotos: true,
-            includeBase64: false,
-            quality: 1,
-            aspect: [4, 3],
-            allowEditing: true
-        })
-
-        const source = { uri: result.uri }
-        console.log(source)
-        setTestImage(source)
-    }
-
-    async function uploadToStorage(select) {
-        setUploading(true)
-        console.log(select)
-        const response = await fetch(select.uri)
-        const blob = await response.blob();
-        const fileName = select.uri.substrig(select.uri.lastIndexOf('/') + 1);
-        var ref = firebase.storage().ref().child(fileName).put(blob);
-
-        try {
-            await ref;
-        } catch (error) {
-            console.error(error)
-        }
-
-        setUploading(false)
-        console.log('image is uploaded')
-        setImage(null)
-    }
-
-    function handleImageConfiguration() {
-        response?.assets.map((uri) => {
-             setImage(uri)
-        })
-    }
-
-    function getLocationPrompt() {
-        GetLocation.getCurrentPosition({
-            enableHighAccuracy: true,
-            timeout: 60000,
-        })
-            .then(location => {
-                setGeoLocation(location)
-                src = location
-                console.log({ src: src });
-            })
-            .catch(error => {
-                const { code, message } = error;
-                console.warn(code, message);
-            })
-    }
-
-    function handleTakePictures() {
-        getLocationPrompt();
-        launchCamera({
-            saveToPhotos: true,
-            mediaType: 'photo',
-            includeBase64: false,
-        }, setResponse);
-        handleImageConfiguration()
-        setValid(true)
-    }
-
-    function handleImageUpload() {
-        getLocationPrompt();
-        launchImageLibrary({
-            selectionLimit: 0,
-            mediaType: 'photo',
-            includeBase64: false,
-        }, setResponse)
-        handleImageConfiguration()
-        setValid(true)
-    }
-
-    const finalImage = () => {
-        if (image !== null) {
-            setImage(src)
-            return image;
-        } else {
-            response?.assets.map((uri) => {
-                setImage(uri)
-            })
-            return image;
-        }
-    }
-
-    function nextScreen(selection) {
-        navigation.navigate('caption',
-            { key: key, name: name, type: type, localsrc: selection.uri, localname: selection.fileName, location: geolocation }
-        )
-    }
-
-    return (
-        <ScrollView style={styles.screen}>
-            <Text style={styles.title} onLongPress={() => nextScreen('quick pass enabled')}>Upload Image</Text>
-            <Text style={styles.caution}>it is recommended that the picture is in landscape mode</Text>
-            {response?.assets &&
-                response?.assets.map((image) => (
-                    <View key={image.uri}>
-                        <View style={styles.image}>
-                            <Image
-                                resizeMode="cover"
-                                resizeMethod="scale"
-                                style={{ width: 400, height: 200, }}
-                                source={{ uri: image.uri }}
-                            />
-                        </View>
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', gap: 10, alignItems: 'center' }}>
-                            <Image source={require('../../../images/pin.png')} style={{ height: 20, width: 20 }} />
-                            <View style={{ flexDirection: 'column', justifyContent: 'space-evenly', gap: 1 }}>
-                                <Text>latitude : {geolocation.latitude}</Text>
-                                <Text>longitude : {geolocation.longitude}</Text>
-                            </View>
-                        </View>
-                        {/* <View>
-                            <TextInput 
-                                multiline={true} 
-                                value={comment} 
-                                onChangeText={(text) => setComment(text)} 
-                                style={{ backgroundColor: 'white', borderBottomWidth: 2, borderBottomColor: '#004AAD' }} 
-                                right={<Avatar.Icon icon='folder' />} 
-                            />
-                        </View> */}
-                    </View>
-                ))}
-
-            <View style={styles.container}>
-                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <TouchableOpacity style={styles.button} onPress={() => {
-                        handleTakePictures()
-                    }}>
-                        <Text style={styles.button_text}>Take Photo</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={() => handleImageUpload()}>
-                        <Text style={styles.button_text} >Upload Photo</Text>
-                    </TouchableOpacity>
-                </View>
-                {isValid
-                    ? <TouchableOpacity style={styles.button_alternative} onPress={() => nextScreen(finalImage())}>
-                        <Text style={styles.button_alternative_text}>Next</Text>
-                    </TouchableOpacity>
-                    : <TouchableOpacity style={styles.button_disabled}>
-                        <Text style={styles.button_text}>Next</Text>
-                    </TouchableOpacity>
-                }
-                <UploadComponent />
-            </View>
-        </ScrollView>
+  const pick_image = async () => {
+    let result = await launchImageLibrary(
+      {
+        selectionLimit: 0,
+        mediaType: 'photo',
+        includeBase64: false,
+        allowsEditing: true,
+      },
+      setResponse,
     );
+    const source = {uri: result.assets[0].uri, name: result.assets[0].fileName};
+    setImage(source);
+    upload_to_storage(source);
+    get_storage_image(source.name);
+    setValid(true);
+  };
+
+  const take_image = async () => {
+    setValid(true);
+    let result = await launchCamera(
+      {
+        saveToPhotos: true,
+        mediaType: 'photo',
+        includeBase64: false,
+      },
+      setResponse,
+    );
+    const source = {uri: result.assets[0].uri, name: result.assets[0].fileName};
+    setImage(source);
+    upload_to_storage(source);
+    get_storage_image(source.name);
+    setValid(true);
+  };
+
+  const get_location_prompt = () => {
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: true,
+      timeout: 60000,
+    })
+      .then(location => {
+        setGeoLocation(location);
+        src = location;
+        reverse_geocoder(src);
+      })
+      .catch(error => {
+        const {code, message} = error;
+        console.warn(code, message);
+      });
+  };
+
+  function nextScreen() {
+    upload_to_storage(image);
+    navigation.navigate('caption', {
+      key: key,
+      name: name,
+      type: type,
+      localsrc: image.uri,
+      localname: image.name,
+      location: geolocation,
+      directLocation: directLocation,
+    });
+  }
+
+  useEffect(() => {
+    get_location_prompt();
+  }, []);
+
+  return (
+    <ScrollView style={styles.screen}>
+      {loading ? (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#004AADa1',
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10,
+          }}>
+          <ActivityIndicator color="#FFFFFF" size="large"></ActivityIndicator>
+          <Text style={{color: '#FFF', fontWeight: 'bold', marginTop: 15}}>
+            Uploading Image
+          </Text>
+        </View>
+      ) : (
+        <View></View>
+      )}
+      <View>
+        <Text style={styles.title}>Upload Image</Text>
+        <Text style={styles.caution}>
+          it is recommended that the picture is in landscape mode
+        </Text>
+        {response?.assets &&
+          response?.assets.map(image => (
+            <View key={image.uri}>
+              <View style={styles.image}>
+                <Image
+                  resizeMode="cover"
+                  resizeMethod="scale"
+                  style={{width: 400, height: 200}}
+                  source={{uri: image.uri}}
+                />
+              </View>
+            </View>
+          ))}
+
+        <View style={styles.container}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}>
+            <TouchableOpacity style={styles.button} onPress={take_image}>
+              <Text style={styles.button_text}>Take Photo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={pick_image}>
+              <Text style={styles.button_text}>Upload Photo</Text>
+            </TouchableOpacity>
+          </View>
+          {isValid ? (
+            <TouchableOpacity
+              style={styles.button_alternative}
+              onPress={() => nextScreen()}>
+              <Text style={styles.button_alternative_text}>Next</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.button_disabled}>
+              <Text style={styles.button_text}>Next</Text>
+            </TouchableOpacity>
+          )}
+          <UploadComponent />
+        </View>
+      </View>
+    </ScrollView>
+  );
 }

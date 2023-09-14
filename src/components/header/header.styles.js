@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors } from "../../utils/theme/colors";
 
 export const styles = StyleSheet.create({
     header: {
@@ -18,20 +19,28 @@ export const styles = StyleSheet.create({
         alignItems: "center"
     },
     title: {
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: "bold",
-        color: '#000000'
+        color: colors.black
     },
     out: {
         padding: 10,
-        backgroundColor: '#ededed',
+        backgroundColor: colors.soft_grey,
         flexDirection: 'row',
         gap: 10,
+        alignItems:"center",
+        justifyContent: "center",
         borderRadius: 50,
-        marginLeft: 'auto'
+        height: 45,
+        width: 45
     },
     out_text: {
         fontSize: 15,
-        color: '#ffffff'
+        color: colors.white
+    },
+    options: {
+        flexDirection: "row",
+        gap: 15,
+        marginLeft: 'auto'
     }
 })
