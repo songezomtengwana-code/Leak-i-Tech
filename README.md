@@ -1,35 +1,37 @@
-# South African Municipal Services 🛠
+## Leaki Tech Mobile Application 
 
-![GitHub Cards Preview](https://i.ibb.co/0ZZHx5B/icon-removebg-preview.png)
+**Leaki Tech**, a mobile and web-based application, aims to streamline communication between residents and their local government, ultimately improving community life and saving public resources. 
 
-S.A.M.S is a mobile and web based application which will make the lives of community members easier whiles also saving the government a lot of money. S.A.M.S is used to report issues like blocked drains, pip bursts as well as electrical malfunctions. The
-application will also be used to alert residence of a specific area to issues that might be taking place in that area. S.A.M.S will connect citizens to their government and create a good communication between the.
+**Report Local Issues, Get Fast Resolutions:**
 
-<br />
+Leak-i Tech empowers residents to report local residential issues, such as blocked drains, pipe bursts, and electrical malfunctions, directly to their municipalities. This streamlines the reporting process and ensures residents are informed of any ongoing issues in their area.
 
-<a href="https://github.com/songezomtengwana-code/SAMSV2/releases/download/v0.0.1/sams.v0.0.1.apk" style="color: #ffffff">***Try latest S.A.M.S app apk 📱***</a>
+**A Bridge Between Citizens and Government:**
 
-<br />
+Leak-i Tech fosters a platform for residents to connect with their local government, ensuring clear and efficient communication. This collaborative approach empowers communities and fosters a sense of shared responsibility.
 
-## Built With 🛠
-- [React Native](https://reactnative.dev/) -React Native combines the best parts of native development with React, a best-in-class JavaScript library for building user interfaces.
-- [React Native Paper](https://reactnativepaper.com) - React Native Paper is a high-quality, standard-compliant Material Design library that has you covered in all major use-cases.
-  - [React Native Navigation](https://reactnavigation.org) - Navigation refers to the interactions that allow users to navigate across, into, and back out from the different pieces of content within your app
-- [Figma](https://figma.com/) - Figma is a vector graphics editor and prototyping tool which is primarily web-based.
+**Get Started Today!**
 
-<br />
+Download the latest release (v1.0.0) of the Leaki Tech mobile application:
 
-## Build-tool 🧰
-You need to have set up your development environment for [React Native Development](https://reactnative.dev/docs/environment-setup) to build this project.
-<br>
-<img src="https://d33wubrfki0l68.cloudfront.net/554c3b0e09cf167f0281fda839a5433f2040b349/ecfc9/img/header_logo.svg" height="100" style='margin: 10px 0' alt="Beta-studio"/>
+* **Android:** [Download The Latest Release (v1.0.0) ](https://github.com/songezomtengwana-code/Leak-i-Tech/releases/download/v0.0.1/leakitech.v1.0.0.apk)
 
-<br>
+**Tech Stack:**
 
-## Contact 📩
-Have an idea to improve this or got any Question? Let's connect 👇
+* **React Native:** ([https://reactnative.dev/docs/environment-setup](https://reactnative.dev/docs/environment-setup)) This framework combines the strengths of native development with React, a leading JavaScript library for building user interfaces.
+* **React Native Paper:** ([https://reactnativepaper.com/](https://reactnativepaper.com/)) A high-quality library that implements Material Design components for a consistent and visually appealing user experience.
+* **React Navigation:** ([https://reactnavigation.org/](https://reactnavigation.org/)) Manages in-app navigation, allowing users to seamlessly navigate between different app sections.
+* **Figma:** ([https://www.figma.com/](https://www.figma.com/)) A powerful design tool for creating vector graphics and interactive prototypes.
+* **Firebase:** ([https://firebase.google.com/](https://firebase.google.com/)) Google's mobile app development platform that simplifies building and scaling user-centric applications.
 
-Drop a mail to:- songezomtengwana@gmail.com
+**Build Prerequisites:**
 
-<br />
+To build this project, ensure you have a development environment set up for React Native Development as outlined in the official documentation: ([https://reactnative.dev/docs/environment-setup](https://reactnative.dev/docs/environment-setup))
 
+**Important Note:** This is a native React Native app, not an Expo app.
+
+**We're Here to Help!**
+
+Do you have an idea to improve Leak-i Tech or have any questions? We'd love to hear from you!
+
+* **Contact:** songezomtengwana@gmail.com
